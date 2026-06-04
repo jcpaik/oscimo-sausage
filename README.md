@@ -56,15 +56,17 @@ J11 = pin 13  6A        K11 = pin 2   1Y
 J12 = pin 14  VDD       K12 = pin 1   1A
 ```
 
-## Current Circuit Assumptions
+## Pinned Circuit Model
+
+The physical circuit is pinned down as a CD4069UBE dual-oscillator buzzer circuit. These directions are part of the circuit model, not open questions.
 
 - `SW1` off is state `A`, connecting `T15-T16`.
 - `SW1` on is state `B`, connecting `T16-T17` and tying `BAT-1` to the circuit `VSS` rail.
 - `BZ1` is polarized with `+` on `J2` and `-` on `K2`.
-- `Q1` is modeled as a PNP high-side transistor: `E` is on `VDD`, `C` feeds `BZ1+`, and `B` is driven by `U1.3Y`.
-- `C1` is polarized with `+` on the `U1.1A` timing node and `-` on `VSS`.
-- `C2` is treated as a non-polarized timing capacitor. If the physical part is polarized, use `M10` as `+` and `M13` as `-`.
-- `D1` is drawn with anode at `L11` and cathode at `L10`, matching the slow-decay/sawtooth shaping model.
+- `Q1` is a PNP high-side buzzer switch: `E` is on `VDD`, `C` feeds `BZ1+`, and `B` is driven by `U1.3Y`.
+- `C1` is a polarized electrolytic timing capacitor with `+` on the `U1.1A` timing node and `-` on `VSS`; the visible `-` stripe is on the lower/VSS side.
+- `C2` is a non-polarized ceramic-disc timing capacitor; it has no polarity.
+- `D1` is a signal diode with anode at `L10` and cathode at `L11`; the visible cathode band is on the lower side. The diode makes the timing waveform asymmetric by giving one charge/discharge direction a fast path and the other direction a slower resistive path.
 - `LED1` is drawn with anode on `VDD` and cathode toward `R1/VSS`.
 
 ## Running The App
@@ -85,6 +87,6 @@ The simulator is a behavioral model, not a SPICE-grade analog solver.
 
 - `POT1` controls the buzzer pulse/modulation rate.
 - `POT2` controls the buzzer tone frequency.
-- `D1` in the sawtooth direction changes the simulated carrier from square to sawtooth.
+- `D1` makes the timing waveform asymmetric. The simulator labels the resulting buzzer carrier as sawtooth-like when D1 is present in the pinned direction, and as flipped sawtooth-like if D1 is reversed.
 - `SW1` must be on, state `B`, for the circuit to be treated as powered.
 - The browser uses a low-volume square wave to approximate the buzzer sound.

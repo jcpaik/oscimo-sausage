@@ -1081,14 +1081,14 @@ function updateSimulationUi() {
 function simulationModel() {
   const pot1 = normalizedKnob(components.find((component) => component.label === "POT1")?.knob);
   const pot2 = normalizedKnob(components.find((component) => component.label === "POT2")?.knob);
-  const sawtooth = isSawtoothDiodeDirection();
+  const diodeShape = diodeShapeDirection();
   return {
     pot1,
     pot2,
     pulseHz: logInterpolate(0.8, 18, pot1 / 100),
     toneHz: Math.round(logInterpolate(90, 1600, pot2 / 100)),
-    audioWaveType: sawtooth ? "sawtooth" : "square",
-    waveLabel: sawtooth ? "sawtooth" : "square",
+    audioWaveType: diodeShape === "none" ? "square" : "sawtooth",
+    waveLabel: diodeShape === "pinned" ? "sawtooth-like" : diodeShape === "flipped" ? "sawtooth-like (D1 flipped)" : "square",
     powered: isSimulationPowered(),
   };
 }
@@ -1110,16 +1110,26 @@ function updateAudioFromModel(model = simulationModel()) {
   simulator.lfoDepth.gain.setTargetAtTime(model.powered ? 0.024 : 0, time, 0.025);
 }
 
-function isSawtoothDiodeDirection() {
+function diodeShapeDirection() {
   const diode = components.find((component) => component.type === "span" && component.kind === "diode" && component.label === "D1");
   const oneY = findFixedPin("U1", "1Y");
   const twoA = findFixedPin("U1", "2A");
-  if (!diode || !oneY || !twoA) return false;
+  if (!diode || !oneY || !twoA) return "none";
+
   const nodeState = computeNodeState();
-  return (
-    nodeState.rootOf(holeKey(diode.from)) === nodeState.rootOf(holeKey(oneY.hole)) &&
-    nodeState.rootOf(holeKey(diode.to)) === nodeState.rootOf(holeKey(twoA.hole))
-  );
+  const fromRoot = nodeState.rootOf(holeKey(diode.from));
+  const toRoot = nodeState.rootOf(holeKey(diode.to));
+  const oneYRoot = nodeState.rootOf(holeKey(oneY.hole));
+  const twoARoot = nodeState.rootOf(holeKey(twoA.hole));
+
+  // Pinned physical direction: visible band/cathode on the lower node.
+  // In this layout that means anode at L10/twoA and cathode at L11/oneY.
+  if (fromRoot === twoARoot && toRoot === oneYRoot) return "pinned";
+
+  // Opposite insertion still gives an asymmetric ramp, but with the fast and slow edges reversed.
+  if (fromRoot === oneYRoot && toRoot === twoARoot) return "flipped";
+
+  return "none";
 }
 
 function findFixedPin(componentLabel, pinName) {
