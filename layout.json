@@ -1,0 +1,481 @@
+{
+  "components": [
+    {
+      "id": "c1780409644501",
+      "type": "fixed",
+      "template": "ic4069",
+      "label": "U1",
+      "origin": {
+        "col": "J",
+        "row": 6
+      }
+    },
+    {
+      "id": "c1780409644503",
+      "type": "fixed",
+      "template": "batPlus",
+      "label": "BAT+1",
+      "origin": {
+        "col": "F",
+        "row": 17
+      }
+    },
+    {
+      "id": "c1780409644504",
+      "type": "fixed",
+      "template": "batMinus",
+      "label": "BAT-1",
+      "origin": {
+        "col": "P",
+        "row": 17
+      }
+    },
+    {
+      "id": "c1780409644505",
+      "type": "fixed",
+      "template": "pot",
+      "label": "POT1",
+      "origin": {
+        "col": "A",
+        "row": 7
+      },
+      "knob": 22
+    },
+    {
+      "id": "c1780409644506",
+      "type": "fixed",
+      "template": "pot",
+      "label": "POT2",
+      "origin": {
+        "col": "T",
+        "row": 7
+      },
+      "knob": 25
+    },
+    {
+      "id": "c1780409644507",
+      "type": "span",
+      "kind": "jumper",
+      "label": "W1",
+      "from": {
+        "col": "C",
+        "row": 14
+      },
+      "to": {
+        "col": "C",
+        "row": 9
+      }
+    },
+    {
+      "id": "c1780409644508",
+      "type": "span",
+      "kind": "jumper",
+      "label": "W2",
+      "from": {
+        "col": "D",
+        "row": 7
+      },
+      "to": {
+        "col": "D",
+        "row": 15
+      }
+    },
+    {
+      "id": "c1780409644509",
+      "type": "span",
+      "kind": "jumper",
+      "label": "W3",
+      "from": {
+        "col": "E",
+        "row": 14
+      },
+      "to": {
+        "col": "F",
+        "row": 14
+      }
+    },
+    {
+      "id": "c1780409644510",
+      "type": "span",
+      "kind": "jumper",
+      "label": "W4",
+      "from": {
+        "col": "E",
+        "row": 15
+      },
+      "to": {
+        "col": "F",
+        "row": 15
+      }
+    },
+    {
+      "id": "c1780409644511",
+      "type": "span",
+      "kind": "jumper",
+      "label": "W5",
+      "from": {
+        "col": "G",
+        "row": 17
+      },
+      "to": {
+        "col": "G",
+        "row": 12
+      }
+    },
+    {
+      "id": "c1780409644513",
+      "type": "span",
+      "kind": "jumper",
+      "label": "W7",
+      "from": {
+        "col": "G",
+        "row": 3
+      },
+      "to": {
+        "col": "G",
+        "row": 5
+      }
+    },
+    {
+      "id": "c1780495286901",
+      "type": "span",
+      "kind": "jumper",
+      "label": "W8",
+      "from": {
+        "col": "K",
+        "row": 15
+      },
+      "to": {
+        "col": "J",
+        "row": 15
+      }
+    },
+    {
+      "id": "c1780495286902",
+      "type": "span",
+      "kind": "jumper",
+      "label": "W9",
+      "from": {
+        "col": "J",
+        "row": 14
+      },
+      "to": {
+        "col": "K",
+        "row": 14
+      }
+    },
+    {
+      "id": "c1780495286903",
+      "type": "span",
+      "kind": "resistor",
+      "label": "R1",
+      "from": {
+        "col": "J",
+        "row": 16
+      },
+      "to": {
+        "col": "K",
+        "row": 16
+      }
+    },
+    {
+      "id": "c1780495286904",
+      "type": "fixed",
+      "template": "led",
+      "label": "LED1",
+      "origin": {
+        "col": "H",
+        "row": 16
+      }
+    },
+    {
+      "id": "c1780495286905",
+      "type": "span",
+      "kind": "jumper",
+      "label": "W10",
+      "from": {
+        "col": "J",
+        "row": 5
+      },
+      "to": {
+        "col": "K",
+        "row": 5
+      }
+    },
+    {
+      "id": "c1780495286906",
+      "type": "span",
+      "kind": "jumper",
+      "label": "W11",
+      "from": {
+        "col": "L",
+        "row": 5
+      },
+      "to": {
+        "col": "L",
+        "row": 7
+      }
+    },
+    {
+      "id": "c1780495286907",
+      "type": "span",
+      "kind": "jumper",
+      "label": "W12",
+      "from": {
+        "col": "L",
+        "row": 8
+      },
+      "to": {
+        "col": "L",
+        "row": 9
+      }
+    },
+    {
+      "id": "c1780495286908",
+      "type": "span",
+      "kind": "diode",
+      "label": "D1",
+      "from": {
+        "col": "L",
+        "row": 11
+      },
+      "to": {
+        "col": "L",
+        "row": 10
+      }
+    },
+    {
+      "id": "c1780495286909",
+      "type": "fixed",
+      "template": "capCyl",
+      "label": "C1",
+      "origin": {
+        "col": "L",
+        "row": 12
+      }
+    },
+    {
+      "id": "c1780495286910",
+      "type": "fixed",
+      "template": "capChip",
+      "label": "C2",
+      "origin": {
+        "col": "M",
+        "row": 10
+      }
+    },
+    {
+      "id": "c1780495286911",
+      "type": "span",
+      "kind": "jumper",
+      "label": "W13",
+      "from": {
+        "col": "R",
+        "row": 5
+      },
+      "to": {
+        "col": "R",
+        "row": 13
+      }
+    },
+    {
+      "id": "c1780495286913",
+      "type": "span",
+      "kind": "jumper",
+      "label": "W15",
+      "from": {
+        "col": "O",
+        "row": 16
+      },
+      "to": {
+        "col": "P",
+        "row": 16
+      }
+    },
+    {
+      "id": "c1780495286914",
+      "type": "span",
+      "kind": "jumper",
+      "label": "W16",
+      "from": {
+        "col": "Q",
+        "row": 13
+      },
+      "to": {
+        "col": "Q",
+        "row": 16
+      }
+    },
+    {
+      "id": "c1780495286915",
+      "type": "span",
+      "kind": "jumper",
+      "label": "W17",
+      "from": {
+        "col": "Q",
+        "row": 5
+      },
+      "to": {
+        "col": "Q",
+        "row": 2
+      }
+    },
+    {
+      "id": "c1780495286916",
+      "type": "span",
+      "kind": "jumper",
+      "label": "W18",
+      "from": {
+        "col": "P",
+        "row": 2
+      },
+      "to": {
+        "col": "O",
+        "row": 2
+      }
+    },
+    {
+      "id": "c1780495286917",
+      "type": "span",
+      "kind": "jumper",
+      "label": "W19",
+      "from": {
+        "col": "N",
+        "row": 2
+      },
+      "to": {
+        "col": "N",
+        "row": 6
+      }
+    },
+    {
+      "id": "c1780496072830",
+      "type": "fixed",
+      "template": "transistor",
+      "label": "Q1",
+      "origin": {
+        "col": "H",
+        "row": 2
+      }
+    },
+    {
+      "id": "c1780496072831",
+      "type": "fixed",
+      "template": "buzzer",
+      "label": "BZ1",
+      "origin": {
+        "col": "J",
+        "row": 2
+      }
+    },
+    {
+      "id": "c1780496072832",
+      "type": "span",
+      "kind": "jumper",
+      "label": "W20",
+      "from": {
+        "col": "N",
+        "row": 15
+      },
+      "to": {
+        "col": "N",
+        "row": 12
+      }
+    },
+    {
+      "id": "c1780496072834",
+      "type": "span",
+      "kind": "jumper",
+      "label": "W21",
+      "from": {
+        "col": "O",
+        "row": 14
+      },
+      "to": {
+        "col": "O",
+        "row": 11
+      }
+    },
+    {
+      "id": "c1780496072835",
+      "type": "span",
+      "kind": "jumper",
+      "label": "W22",
+      "from": {
+        "col": "P",
+        "row": 13
+      },
+      "to": {
+        "col": "O",
+        "row": 13
+      }
+    },
+    {
+      "id": "c1780496072836",
+      "type": "span",
+      "kind": "jumper",
+      "label": "W23",
+      "from": {
+        "col": "O",
+        "row": 10
+      },
+      "to": {
+        "col": "P",
+        "row": 10
+      }
+    },
+    {
+      "id": "c1780496072837",
+      "type": "span",
+      "kind": "jumper",
+      "label": "W24",
+      "from": {
+        "col": "O",
+        "row": 9
+      },
+      "to": {
+        "col": "P",
+        "row": 9
+      }
+    },
+    {
+      "id": "c1780496072838",
+      "type": "span",
+      "kind": "jumper",
+      "label": "W14",
+      "from": {
+        "col": "S",
+        "row": 10
+      },
+      "to": {
+        "col": "S",
+        "row": 11
+      }
+    },
+    {
+      "id": "c1780496072839",
+      "type": "fixed",
+      "template": "switch3",
+      "label": "SW1",
+      "origin": {
+        "col": "T",
+        "row": 15
+      },
+      "state": "B"
+    },
+    {
+      "id": "c1780496072840",
+      "type": "span",
+      "kind": "jumper",
+      "label": "W6",
+      "from": {
+        "col": "F",
+        "row": 4
+      },
+      "to": {
+        "col": "F",
+        "row": 12
+      }
+    }
+  ]
+}

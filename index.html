@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Breadboard Layout Editor</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar" aria-label="Editor controls">
+        <header class="brand">
+          <div class="brand-mark">BB</div>
+          <div>
+            <h1>Breadboard Layout</h1>
+            <p>20 x 17 abstract circuit plan</p>
+          </div>
+        </header>
+
+        <section class="panel">
+          <h2>Mode</h2>
+          <div class="tool-grid two">
+            <button class="tool active" type="button" data-tool="select" title="Select and move">
+              <span class="tool-icon">SEL</span>
+              <span>Select</span>
+            </button>
+            <button class="tool" type="button" data-tool="ic4069" title="CD4069UBE DIP">
+              <span class="tool-icon">IC</span>
+              <span>CD4069</span>
+            </button>
+          </div>
+        </section>
+
+        <section class="panel">
+          <h2>Span</h2>
+          <div class="tool-grid">
+            <button class="tool" type="button" data-tool="jumper" title="Jumper wire">
+              <span class="tool-icon">W</span>
+              <span>Wire</span>
+            </button>
+            <button class="tool" type="button" data-tool="resistor" title="Resistor">
+              <span class="tool-icon">R</span>
+              <span>Resistor</span>
+            </button>
+            <button class="tool" type="button" data-tool="diode" title="Diode">
+              <span class="tool-icon">D</span>
+              <span>Diode</span>
+            </button>
+          </div>
+        </section>
+
+        <section class="panel">
+          <h2>Fixed</h2>
+          <div class="tool-grid">
+            <button class="tool" type="button" data-tool="buzzer" title="Buzzer">
+              <span class="tool-icon">BZ</span>
+              <span>Buzzer</span>
+            </button>
+            <button class="tool" type="button" data-tool="transistor" title="Transistor">
+              <span class="tool-icon">Q</span>
+              <span>Transistor</span>
+            </button>
+            <button class="tool" type="button" data-tool="switch3" title="3-pin switch">
+              <span class="tool-icon">SW</span>
+              <span>Switch</span>
+            </button>
+            <button class="tool" type="button" data-tool="pot" title="Potentiometer">
+              <span class="tool-icon">POT</span>
+              <span>Pot</span>
+            </button>
+            <button class="tool" type="button" data-tool="led" title="LED">
+              <span class="tool-icon">LED</span>
+              <span>LED</span>
+            </button>
+            <button class="tool" type="button" data-tool="capCyl" title="Cylindrical capacitor">
+              <span class="tool-icon">EL</span>
+              <span>Cap cyl</span>
+            </button>
+            <button class="tool" type="button" data-tool="capChip" title="Chip capacitor">
+              <span class="tool-icon">C</span>
+              <span>Cap chip</span>
+            </button>
+            <button class="tool" type="button" data-tool="batPlus" title="Battery positive lead">
+              <span class="tool-icon">+</span>
+              <span>BAT+</span>
+            </button>
+            <button class="tool" type="button" data-tool="batMinus" title="Battery negative lead">
+              <span class="tool-icon">-</span>
+              <span>BAT-</span>
+            </button>
+          </div>
+        </section>
+
+        <section class="panel inspector">
+          <h2>Selected</h2>
+          <div id="selectionPanel" class="selection-panel">None</div>
+        </section>
+
+        <section class="panel simulation-panel">
+          <h2>Simulation</h2>
+          <div class="sim-controls">
+            <button id="simToggle" class="sim-toggle" type="button">Start Buzzer</button>
+            <span id="simLed" class="sim-led" aria-hidden="true"></span>
+          </div>
+          <div class="sim-readouts" aria-live="polite">
+            <div><span>POT1</span><strong id="simPot1">50%</strong></div>
+            <div><span>POT2</span><strong id="simPot2">50%</strong></div>
+            <div><span>Tone</span><strong id="simTone">-- Hz</strong></div>
+            <div><span>Pulse</span><strong id="simPulse">-- Hz</strong></div>
+            <div><span>Wave</span><strong id="simWave">--</strong></div>
+            <div><span>Power</span><strong id="simPower">--</strong></div>
+          </div>
+        </section>
+      </aside>
+
+      <main class="workspace">
+        <div class="topbar">
+          <div class="command-strip">
+            <label class="switch-label">
+              <input id="showNodes" type="checkbox" checked>
+              <span>Nodes</span>
+            </label>
+            <button id="deleteBtn" class="compact-button" type="button" title="Delete selected">Delete</button>
+            <button id="resetBtn" class="compact-button" type="button" title="Load saved default layout">Load Saved</button>
+            <button id="clearBtn" class="compact-button danger" type="button" title="Clear all">Clear</button>
+            <button id="exportBtn" class="compact-button" type="button" title="Export JSON">Export</button>
+          </div>
+          <div id="statusLine" class="status-line">Ready</div>
+        </div>
+
+        <div class="board-frame">
+          <svg id="boardSvg" role="img" aria-label="Breadboard editor"></svg>
+        </div>
+
+        <textarea id="exportBox" class="export-box" readonly spellcheck="false"></textarea>
+      </main>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
