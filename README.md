@@ -77,7 +77,7 @@ Run the local save server:
 python3 server.py 4174
 ```
 
-Then open `http://127.0.0.1:4174/index.html` in a browser.
+Then open `http://127.0.0.1:4174/index.html` for the assembly guide, or `http://127.0.0.1:4174/editor.html` for the layout editor.
 
 The app loads `layout.json` on startup. Every edit autosaves back to `layout.json` through the local server. If the app is opened without `server.py`, it can still use browser fallback storage, but it cannot write `layout.json`.
 

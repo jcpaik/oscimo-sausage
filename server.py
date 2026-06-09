@@ -58,7 +58,8 @@ def main():
     os.chdir(ROOT)
     port = int(sys.argv[1]) if len(sys.argv) > 1 else 4174
     server = ThreadingHTTPServer(("127.0.0.1", port), LayoutHandler)
-    print(f"Serving breadboard editor at http://127.0.0.1:{port}/index.html")
+    print(f"Serving assembly guide at http://127.0.0.1:{port}/index.html")
+    print(f"Breadboard editor at http://127.0.0.1:{port}/editor.html")
     print(f"Autosaving layout to {LAYOUT_PATH}")
     server.serve_forever()
 

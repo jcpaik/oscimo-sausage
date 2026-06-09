@@ -1,141 +1,1146 @@
 <!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Breadboard Layout Editor</title>
-    <link rel="stylesheet" href="styles.css">
-  </head>
-  <body>
-    <div class="app-shell">
-      <aside class="sidebar" aria-label="Editor controls">
-        <header class="brand">
-          <div class="brand-mark">BB</div>
-          <div>
-            <h1>Breadboard Layout</h1>
-            <p>20 x 17 abstract circuit plan</p>
-          </div>
-        </header>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>소시지 신시사이저 브레드보드 조립 안내</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f4f1ea;
+      --surface: #fffdf8;
+      --surface-soft: #faf8f2;
+      --ink: #242629;
+      --muted: #6d7178;
+      --line: #d7d0c4;
+      --hole: #24282d;
+      --accent: #0f766e;
+      --accent-2: #b45309;
+      --danger: #b42318;
+      --safe: #166534;
+      --wire: #f97316;
+      --resistor: #0f766e;
+      --diode: #8b2b2b;
+      --yellow: #facc15;
+      --bluelead: #2563eb;
+      --redlead: #ef4444;
+      --shadow: 0 16px 36px rgba(34, 31, 26, 0.14);
+    }
 
-        <section class="panel">
-          <h2>Mode</h2>
-          <div class="tool-grid two">
-            <button class="tool active" type="button" data-tool="select" title="Select and move">
-              <span class="tool-icon">SEL</span>
-              <span>Select</span>
-            </button>
-            <button class="tool" type="button" data-tool="ic4069" title="CD4069UBE DIP">
-              <span class="tool-icon">IC</span>
-              <span>CD4069</span>
-            </button>
-          </div>
-        </section>
+    * { box-sizing: border-box; }
+    html, body { min-height: 100%; }
 
-        <section class="panel">
-          <h2>Span</h2>
-          <div class="tool-grid">
-            <button class="tool" type="button" data-tool="jumper" title="Jumper wire">
-              <span class="tool-icon">W</span>
-              <span>Wire</span>
-            </button>
-            <button class="tool" type="button" data-tool="resistor" title="Resistor">
-              <span class="tool-icon">R</span>
-              <span>Resistor</span>
-            </button>
-            <button class="tool" type="button" data-tool="diode" title="Diode">
-              <span class="tool-icon">D</span>
-              <span>Diode</span>
-            </button>
-          </div>
-        </section>
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans KR", sans-serif;
+      font-size: 15px;
+      line-height: 1.48;
+    }
 
-        <section class="panel">
-          <h2>Fixed</h2>
-          <div class="tool-grid">
-            <button class="tool" type="button" data-tool="buzzer" title="Buzzer">
-              <span class="tool-icon">BZ</span>
-              <span>Buzzer</span>
-            </button>
-            <button class="tool" type="button" data-tool="transistor" title="Transistor">
-              <span class="tool-icon">Q</span>
-              <span>Transistor</span>
-            </button>
-            <button class="tool" type="button" data-tool="switch3" title="3-pin switch">
-              <span class="tool-icon">SW</span>
-              <span>Switch</span>
-            </button>
-            <button class="tool" type="button" data-tool="pot" title="Potentiometer">
-              <span class="tool-icon">POT</span>
-              <span>Pot</span>
-            </button>
-            <button class="tool" type="button" data-tool="led" title="LED">
-              <span class="tool-icon">LED</span>
-              <span>LED</span>
-            </button>
-            <button class="tool" type="button" data-tool="capCyl" title="Cylindrical capacitor">
-              <span class="tool-icon">EL</span>
-              <span>Cap cyl</span>
-            </button>
-            <button class="tool" type="button" data-tool="capChip" title="Chip capacitor">
-              <span class="tool-icon">C</span>
-              <span>Cap chip</span>
-            </button>
-            <button class="tool" type="button" data-tool="batPlus" title="Battery positive lead">
-              <span class="tool-icon">+</span>
-              <span>BAT+</span>
-            </button>
-            <button class="tool" type="button" data-tool="batMinus" title="Battery negative lead">
-              <span class="tool-icon">-</span>
-              <span>BAT-</span>
-            </button>
-          </div>
-        </section>
+    button { font: inherit; }
 
-        <section class="panel inspector">
-          <h2>Selected</h2>
-          <div id="selectionPanel" class="selection-panel">None</div>
-        </section>
+    .page {
+      min-height: 100vh;
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr);
+    }
 
-        <section class="panel simulation-panel">
-          <h2>Simulation</h2>
-          <div class="sim-controls">
-            <button id="simToggle" class="sim-toggle" type="button">Start Buzzer</button>
-            <span id="simLed" class="sim-led" aria-hidden="true"></span>
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 16px 22px;
+      background: rgba(255, 253, 248, 0.94);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(8px);
+    }
+
+    .title-block h1 {
+      margin: 0;
+      font-size: clamp(21px, 3vw, 34px);
+      letter-spacing: -0.03em;
+      line-height: 1.12;
+    }
+
+    .title-block p {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .lang-toggle {
+      min-width: 96px;
+      height: 40px;
+      border: 1px solid #9ca3af;
+      border-radius: 999px;
+      background: #ffffff;
+      color: var(--ink);
+      cursor: pointer;
+      box-shadow: 0 5px 16px rgba(0, 0, 0, 0.08);
+    }
+
+    .lang-toggle:hover,
+    .lang-toggle:focus-visible {
+      border-color: #64748b;
+      outline: none;
+    }
+
+    .main {
+      display: grid;
+      grid-template-columns: minmax(620px, 1.9fr) minmax(350px, 0.8fr);
+      gap: 18px;
+      padding: 18px 22px 28px;
+    }
+
+    .visual-pane,
+    .notes-pane {
+      min-width: 0;
+    }
+
+    .visual-card,
+    .notes-card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+    }
+
+    .visual-card {
+      overflow: hidden;
+    }
+
+    .visual-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 14px 16px 10px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .visual-head h2 {
+      margin: 0;
+      font-size: 17px;
+    }
+
+    .visual-head p {
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .legend {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .legend span {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 8px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: #fff;
+      white-space: nowrap;
+    }
+
+    .legend i {
+      width: 12px;
+      height: 12px;
+      border-radius: 4px;
+      display: inline-block;
+    }
+
+    .svg-wrap {
+      overflow: auto;
+      padding: 12px 14px 18px;
+      background: #f7f3eb;
+    }
+
+    #boardSvg {
+      display: block;
+      width: 100%;
+      min-width: 920px;
+      height: auto;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+    }
+
+    .notes-card {
+      padding: 16px;
+    }
+
+    .answer-card {
+      margin: 0 0 14px;
+      padding: 12px 13px;
+      border: 1px solid #f4c7a1;
+      border-radius: 12px;
+      background: #fff7ed;
+      color: #7c2d12;
+      font-weight: 700;
+    }
+
+    .danger-card {
+      margin: 0 0 14px;
+      padding: 12px 13px;
+      border: 1px solid #fecaca;
+      border-radius: 12px;
+      background: #fff1f2;
+      color: #7f1d1d;
+      font-weight: 700;
+    }
+
+    .section {
+      padding: 14px 0;
+      border-top: 1px solid var(--line);
+    }
+
+    .section:first-of-type {
+      border-top: 0;
+      padding-top: 0;
+    }
+
+    .section h2 {
+      margin: 0 0 9px;
+      font-size: 16px;
+      letter-spacing: -0.01em;
+    }
+
+    .section ul,
+    .section ol {
+      margin: 0;
+      padding-left: 1.25rem;
+    }
+
+    .section li { margin: 6px 0; }
+    .section li li { margin: 4px 0; }
+
+    .coordinate-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      overflow: hidden;
+      border-radius: 10px;
+    }
+
+    .coordinate-table th,
+    .coordinate-table td {
+      padding: 8px 7px;
+      border: 1px solid var(--line);
+      vertical-align: top;
+      text-align: left;
+    }
+
+    .coordinate-table th {
+      background: #f2eee5;
+      font-size: 12px;
+      color: #55585f;
+      white-space: nowrap;
+    }
+
+    .coordinate-table td:first-child {
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    code.coord {
+      display: inline-block;
+      padding: 1px 6px;
+      border-radius: 6px;
+      background: #eff6ff;
+      color: #1d4ed8;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size: 0.92em;
+      font-weight: 800;
+    }
+
+    .fine-print {
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .hidden { display: none !important; }
+
+    /* SVG styles */
+    .board-label {
+      fill: #60646b;
+      font-size: 12px;
+      font-weight: 800;
+      text-anchor: middle;
+      dominant-baseline: middle;
+      pointer-events: none;
+    }
+
+    .row-label {
+      fill: #60646b;
+      font-size: 12px;
+      font-weight: 800;
+      text-anchor: middle;
+      dominant-baseline: middle;
+      pointer-events: none;
+    }
+
+    .block-label {
+      fill: #81796e;
+      font-size: 11px;
+      font-weight: 800;
+      text-anchor: middle;
+      dominant-baseline: middle;
+      pointer-events: none;
+    }
+
+    .block-panel {
+      fill: #faf8f2;
+      stroke: #e5ded2;
+      stroke-width: 1;
+    }
+
+    .gap-panel { fill: #efe8dc; }
+    .hole-dot { fill: var(--hole); }
+    .hole-ring { fill: transparent; stroke: #c6bbaa; stroke-width: 1.4; }
+
+    .wire-path {
+      fill: none;
+      stroke: var(--wire);
+      stroke-width: 7;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .wire-shadow,
+    .component-shadow {
+      fill: none;
+      stroke: rgba(0, 0, 0, 0.13);
+      stroke-width: 10;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .wire-end {
+      fill: #fff7ed;
+      stroke: var(--wire);
+      stroke-width: 3;
+    }
+
+    .component-label,
+    .pin-label,
+    .callout-text,
+    .small-label {
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans KR", sans-serif;
+      pointer-events: none;
+    }
+
+    .component-label {
+      fill: #111827;
+      font-size: 12px;
+      font-weight: 900;
+      text-anchor: middle;
+      dominant-baseline: middle;
+      paint-order: stroke;
+      stroke: rgba(255, 255, 255, 0.78);
+      stroke-width: 4px;
+      stroke-linejoin: round;
+    }
+
+    .pin-dot {
+      fill: #fff;
+      stroke: #2f3540;
+      stroke-width: 2;
+    }
+
+    .pin-label {
+      fill: #111827;
+      font-size: 9px;
+      font-weight: 900;
+      text-anchor: middle;
+      dominant-baseline: middle;
+    }
+
+    .callout-box {
+      fill: rgba(255, 255, 255, 0.94);
+      stroke: #c7bda9;
+      stroke-width: 1.1;
+    }
+
+    .callout-box.warn {
+      fill: #fff7ed;
+      stroke: #fdba74;
+    }
+
+    .callout-box.danger {
+      fill: #fff1f2;
+      stroke: #fca5a5;
+    }
+
+    .callout {
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.15s ease;
+    }
+
+    .callout.show { opacity: 0.7; }
+
+    .callout-text {
+      fill: #2d3137;
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .small-label {
+      fill: #4b5563;
+      font-size: 10px;
+      font-weight: 800;
+      text-anchor: middle;
+      dominant-baseline: middle;
+    }
+
+    .resistor-body { fill: #f3e7c4; stroke: #906a35; stroke-width: 1.5; }
+    .diode-body { fill: #a64b3c; stroke: #5f1d17; stroke-width: 1.5; }
+    .diode-band { fill: #111827; }
+    .led-body { fill: #facc15; stroke: #b45309; stroke-width: 2; opacity: 0.92; }
+    .cap-cyl { fill: #c7d2fe; stroke: #4338ca; stroke-width: 1.5; }
+    .cap-chip { fill: #d8c091; stroke: #7c5e2a; stroke-width: 1.5; }
+    .ic-body { fill: #1f2937; stroke: #111827; stroke-width: 2; }
+    .ic-notch { fill: #fffdf8; stroke: #111827; stroke-width: 2; }
+    .ic-dot { fill: #fffdf8; stroke: #111827; stroke-width: 1.2; }
+    .buzzer-face { fill: #1f2937; stroke: #0f172a; stroke-width: 4; }
+    .buzzer-hole { fill: #f8fafc; opacity: 0.9; }
+    .transistor-face { fill: #253244; stroke: #111827; stroke-width: 2; }
+    .switch-body { fill: #1f2937; stroke: #111827; stroke-width: 2; }
+    .pot-face { fill: #d1eef3; stroke: #0e7490; stroke-width: 2; }
+    .pot-pointer { stroke: #155e75; stroke-width: 3; stroke-linecap: round; }
+    .battery-plus { fill: #fee2e2; stroke: var(--redlead); stroke-width: 3; }
+    .battery-minus { fill: #dbeafe; stroke: var(--bluelead); stroke-width: 3; }
+
+    @media (max-width: 1060px) {
+      .main { grid-template-columns: 1fr; }
+      .notes-pane { order: -1; }
+      #boardSvg { min-width: 900px; }
+    }
+
+    @media (max-width: 640px) {
+      .topbar { align-items: flex-start; padding: 14px; }
+      .main { padding: 12px; }
+      .visual-head { display: block; }
+      .legend { justify-content: flex-start; margin-top: 10px; }
+      .lang-toggle { min-width: 82px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="topbar">
+      <div class="title-block">
+        <h1 data-i18n="title">소시지 신시사이저 브레드보드 조립 안내</h1>
+        <p data-i18n="subtitle">전원은 맨 마지막에 연결하세요. 행 번호는 위에서 아래로 커집니다.</p>
+      </div>
+      <button id="langToggle" class="lang-toggle" type="button" aria-label="Toggle language">English</button>
+    </header>
+
+    <main class="main">
+      <section class="visual-pane">
+        <div class="visual-card">
+          <div class="visual-head">
+            <div>
+              <h2 data-i18n="boardTitle">전체 배치도</h2>
+              <p data-i18n="boardSub">점퍼선에는 1/2 끝표시를 넣지 않았습니다. 어느 쪽부터 꽂아도 됩니다.</p>
+            </div>
+            <div class="legend" aria-label="legend">
+              <span><i style="background:#f97316"></i><b data-i18n="legendWire">점퍼선</b></span>
+              <span><i style="background:#facc15"></i><b data-i18n="legendPolarity">방향 주의</b></span>
+              <span><i style="background:#ef4444"></i><b data-i18n="legendPower">전원</b></span>
+            </div>
           </div>
-          <div class="sim-readouts" aria-live="polite">
-            <div><span>POT1</span><strong id="simPot1">50%</strong></div>
-            <div><span>POT2</span><strong id="simPot2">50%</strong></div>
-            <div><span>Tone</span><strong id="simTone">-- Hz</strong></div>
-            <div><span>Pulse</span><strong id="simPulse">-- Hz</strong></div>
-            <div><span>Wave</span><strong id="simWave">--</strong></div>
-            <div><span>Power</span><strong id="simPower">--</strong></div>
+          <div class="svg-wrap">
+            <svg id="boardSvg" role="img" aria-labelledby="boardTitleSvg boardDescSvg">
+              <title id="boardTitleSvg">Breadboard assembly diagram</title>
+              <desc id="boardDescSvg">20 column by 17 row breadboard diagram showing parts and orientations.</desc>
+            </svg>
           </div>
-        </section>
+        </div>
+      </section>
+
+      <aside class="notes-pane">
+        <div class="notes-card">
+          <div class="lang-block" data-lang="ko">
+            <div class="answer-card">
+              빈칸 답: <strong>대용량 캐패시터 긴 다리 = 위쪽 L12</strong>, <strong>LED 긴 다리 = 아래쪽 H17</strong>.
+            </div>
+            <div class="danger-card">
+              전원은 회로 조립을 전부 마친 뒤에만 연결하세요. 빨간 +선은 <code class="coord">F17</code>, 파란색/검은색 −선은 <code class="coord">P17</code>입니다. 두 전원선이 직접 닿으면 안 됩니다.
+            </div>
+
+            <section class="section">
+              <h2>부품 생김새</h2>
+              <ul>
+                <li><strong>LED</strong>: 노란색입니다. 긴 다리가 +, 짧은 다리가 −입니다.</li>
+                <li><strong>다이오드 D1</strong>: 붉은빛이 도는 아주 작은 부품이고, 한쪽 끝에 검은 띠가 있습니다.</li>
+                <li><strong>인버터 U1</strong>: 길쭉한 검은 칩입니다. 홈이나 점 표시가 있는 쪽을 아래로 둡니다.</li>
+                <li><strong>소용량 캐패시터 C2</strong>: 동그란 베이지색 칩입니다. 방향은 없습니다.</li>
+                <li><strong>대용량 캐패시터 C1</strong>: 기둥처럼 생긴 원통형 부품입니다. 긴 다리가 +입니다.</li>
+                <li><strong>버저 BZ1</strong>: 동그란 원형 부품이고 +마크가 있습니다. 소리를 내는 부품입니다.</li>
+                <li><strong>스위치 SW1</strong>: 다리 3개짜리 작은 스위치입니다. 세 다리를 <code class="coord">T15</code>–<code class="coord">T17</code>에 세로로 꽂습니다.</li>
+              </ul>
+            </section>
+
+            <section class="section">
+              <h2>방향 꼭 확인</h2>
+              <ul>
+                <li><strong>트랜지스터 Q1</strong>: 둥근 부분이 왼쪽을 보게 꽂습니다.</li>
+                <li><strong>인버터 U1</strong>: 홈/점 표시가 아래쪽을 보게 합니다. 1번 핀은 오른쪽 아래, <code class="coord">K12</code> 쪽입니다.</li>
+                <li><strong>대용량 캐패시터 C1</strong>: 긴 +다리는 위쪽 <code class="coord">L12</code>, 짧은 −다리는 아래쪽 <code class="coord">L13</code>입니다.</li>
+                <li><strong>LED1</strong>: 긴 +다리는 아래쪽 <code class="coord">H17</code>, 짧은 −다리는 위쪽 <code class="coord">H16</code>입니다.</li>
+                <li><strong>다이오드 D1</strong>: 검은 띠가 있는 쪽을 아래쪽 <code class="coord">L11</code>에 둡니다.</li>
+                <li><strong>버저 BZ1</strong>: +마크가 왼쪽 <code class="coord">J2</code> 방향에 오게 합니다.</li>
+              </ul>
+            </section>
+
+            <section class="section">
+              <h2>다리 자르기</h2>
+              <ul>
+                <li>저항, 다이오드처럼 다리가 긴 부품은 니퍼나 펜치가 가장 좋고, 없으면 손톱깎이로 잘라도 됩니다.</li>
+                <li><strong>주의:</strong> 긴 다리/짧은 다리로 방향을 구분하는 LED와 대용량 캐패시터는 같은 길이로 자르지 마세요.</li>
+                <li>긴 쪽은 더 길게, 짧은 쪽은 약간 짧게 남깁니다. 너무 길면 다 안 들어가지만, 꽂히는 선에서는 충분히 길게 남기는 편이 안전합니다.</li>
+              </ul>
+            </section>
+
+            <section class="section">
+              <h2>조립 순서</h2>
+              <ol>
+                <li>배터리를 연결하지 않은 상태에서 점퍼선과 저항을 먼저 꽂습니다.</li>
+                <li>D1, LED1, C1, U1, Q1, BZ1처럼 방향이 있는 부품을 배치도와 대조하며 꽂습니다.</li>
+                <li>모든 극성을 다시 확인합니다. 특히 <code class="coord">L12/L13</code>, <code class="coord">H16/H17</code>, <code class="coord">J2/K2</code>를 확인합니다.</li>
+                <li>마지막으로만 배터리 +를 <code class="coord">F17</code>, −를 <code class="coord">P17</code>에 연결합니다.</li>
+              </ol>
+            </section>
+
+            <section class="section">
+              <h2>핵심 좌표 요약</h2>
+              <table class="coordinate-table">
+                <thead><tr><th>부품</th><th>좌표</th><th>방향</th></tr></thead>
+                <tbody>
+                  <tr><td>U1</td><td><code class="coord">J6</code>–<code class="coord">K12</code></td><td>홈/점 아래쪽</td></tr>
+                  <tr><td>D1</td><td><code class="coord">L10</code>–<code class="coord">L11</code></td><td>검은 띠 아래쪽</td></tr>
+                  <tr><td>C1</td><td><code class="coord">L12</code>–<code class="coord">L13</code></td><td>긴 +다리 위쪽</td></tr>
+                  <tr><td>LED1</td><td><code class="coord">H16</code>–<code class="coord">H17</code></td><td>긴 +다리 아래쪽</td></tr>
+                  <tr><td>BZ1</td><td><code class="coord">J2</code>–<code class="coord">K2</code></td><td>+가 왼쪽</td></tr>
+                  <tr><td>Q1</td><td><code class="coord">H2</code>–<code class="coord">H4</code></td><td>둥근 부분 왼쪽</td></tr>
+                  <tr><td>SW1</td><td><code class="coord">T15</code>–<code class="coord">T17</code></td><td>세 다리 세로</td></tr>
+                </tbody>
+              </table>
+              <p class="fine-print">행 번호는 위에서 아래로 커집니다. 그래서 “아래쪽”은 더 큰 숫자의 행입니다.</p>
+            </section>
+          </div>
+
+          <div class="lang-block hidden" data-lang="en">
+            <div class="answer-card">
+              Fill-ins: <strong>large capacitor long leg = upper hole L12</strong>; <strong>LED long leg = lower hole H17</strong>.
+            </div>
+            <div class="danger-card">
+              Connect power only after the circuit is fully assembled. Red + lead goes to <code class="coord">F17</code>; blue/black − lead goes to <code class="coord">P17</code>. Never let the two power leads touch directly.
+            </div>
+
+            <section class="section">
+              <h2>What each part looks like</h2>
+              <ul>
+                <li><strong>LED</strong>: yellow. The long leg is +, the short leg is −.</li>
+                <li><strong>Diode D1</strong>: tiny reddish part with a black band on one end.</li>
+                <li><strong>Inverter U1</strong>: long black chip. Put the notch or dot end downward.</li>
+                <li><strong>Small capacitor C2</strong>: round beige chip. It has no direction.</li>
+                <li><strong>Large capacitor C1</strong>: upright cylinder-shaped part. The long leg is +.</li>
+                <li><strong>Buzzer BZ1</strong>: round part with a + mark. It makes the sound.</li>
+                <li><strong>Switch SW1</strong>: small three-legged switch. Insert the three legs vertically into <code class="coord">T15</code>–<code class="coord">T17</code>.</li>
+              </ul>
+            </section>
+
+            <section class="section">
+              <h2>Orientation check</h2>
+              <ul>
+                <li><strong>Transistor Q1</strong>: the rounded side faces left.</li>
+                <li><strong>Inverter U1</strong>: the notch/dot faces downward. Pin 1 is lower-right, near <code class="coord">K12</code>.</li>
+                <li><strong>Large capacitor C1</strong>: long + leg goes to upper <code class="coord">L12</code>; short − leg goes to lower <code class="coord">L13</code>.</li>
+                <li><strong>LED1</strong>: long + leg goes to lower <code class="coord">H17</code>; short − leg goes to upper <code class="coord">H16</code>.</li>
+                <li><strong>Diode D1</strong>: black band side goes downward to <code class="coord">L11</code>.</li>
+                <li><strong>Buzzer BZ1</strong>: + mark faces left, toward <code class="coord">J2</code>.</li>
+              </ul>
+            </section>
+
+            <section class="section">
+              <h2>Cutting long legs</h2>
+              <ul>
+                <li>Use flush cutters or pliers if available; nail clippers also work for resistors and diodes.</li>
+                <li><strong>Important:</strong> do not cut polarized parts like the LED and large capacitor to the same length before you identify the direction.</li>
+                <li>Leave the long side visibly longer and the short side slightly shorter. Too long may not fit, but leaving enough length is better than cutting too short.</li>
+              </ul>
+            </section>
+
+            <section class="section">
+              <h2>Assembly order</h2>
+              <ol>
+                <li>With the battery disconnected, insert the jumper wires and resistor first.</li>
+                <li>Insert oriented parts such as D1, LED1, C1, U1, Q1, and BZ1 while comparing against the diagram.</li>
+                <li>Check polarity again, especially <code class="coord">L12/L13</code>, <code class="coord">H16/H17</code>, and <code class="coord">J2/K2</code>.</li>
+                <li>Only at the end, connect battery + to <code class="coord">F17</code> and battery − to <code class="coord">P17</code>.</li>
+              </ol>
+            </section>
+
+            <section class="section">
+              <h2>Critical coordinate summary</h2>
+              <table class="coordinate-table">
+                <thead><tr><th>Part</th><th>Coordinates</th><th>Direction</th></tr></thead>
+                <tbody>
+                  <tr><td>U1</td><td><code class="coord">J6</code>–<code class="coord">K12</code></td><td>Notch/dot downward</td></tr>
+                  <tr><td>D1</td><td><code class="coord">L10</code>–<code class="coord">L11</code></td><td>Black band downward</td></tr>
+                  <tr><td>C1</td><td><code class="coord">L12</code>–<code class="coord">L13</code></td><td>Long + leg upward</td></tr>
+                  <tr><td>LED1</td><td><code class="coord">H16</code>–<code class="coord">H17</code></td><td>Long + leg downward</td></tr>
+                  <tr><td>BZ1</td><td><code class="coord">J2</code>–<code class="coord">K2</code></td><td>+ on the left</td></tr>
+                  <tr><td>Q1</td><td><code class="coord">H2</code>–<code class="coord">H4</code></td><td>Rounded side left</td></tr>
+                  <tr><td>SW1</td><td><code class="coord">T15</code>–<code class="coord">T17</code></td><td>Three legs vertical</td></tr>
+                </tbody>
+              </table>
+              <p class="fine-print">Row numbers increase from top to bottom, so “downward” means the larger row number.</p>
+            </section>
+          </div>
+        </div>
       </aside>
+    </main>
+  </div>
 
-      <main class="workspace">
-        <div class="topbar">
-          <div class="command-strip">
-            <label class="switch-label">
-              <input id="showNodes" type="checkbox" checked>
-              <span>Nodes</span>
-            </label>
-            <button id="deleteBtn" class="compact-button" type="button" title="Delete selected">Delete</button>
-            <button id="resetBtn" class="compact-button" type="button" title="Load saved default layout">Load Saved</button>
-            <button id="clearBtn" class="compact-button danger" type="button" title="Clear all">Clear</button>
-            <button id="exportBtn" class="compact-button" type="button" title="Export JSON">Export</button>
-          </div>
-          <div id="statusLine" class="status-line">Ready</div>
-        </div>
+  <script>
+    const COLS = "ABCDEFGHIJKLMNOPQRST".split("");
+    const ROWS = Array.from({ length: 17 }, (_, index) => index + 1);
+    const geom = { left: 132, top: 78, cell: 34, gap: 38, rightPad: 132, bottomPad: 72 };
+    const svg = document.querySelector("#boardSvg");
+    const SVG_NS = "http://www.w3.org/2000/svg";
+    let currentLang = "ko";
+    let calloutLayer = null;
 
-        <div class="board-frame">
-          <svg id="boardSvg" role="img" aria-label="Breadboard editor"></svg>
-        </div>
+    const ui = {
+      ko: {
+        title: "소시지 신시사이저 브레드보드 조립 안내",
+        subtitle: "전원은 맨 마지막에 연결하세요. 행 번호는 위에서 아래로 커집니다.",
+        boardTitle: "전체 배치도",
+        boardSub: "점퍼선에는 1/2 끝표시를 넣지 않았습니다. 어느 쪽부터 꽂아도 됩니다. 부품에 마우스를 올리면 방향 안내가 나타납니다.",
+        legendWire: "점퍼선",
+        legendPolarity: "방향 주의",
+        legendPower: "전원",
+        langButton: "English",
+      },
+      en: {
+        title: "Sausage Synth Breadboard Assembly Guide",
+        subtitle: "Connect power last. Row numbers increase from top to bottom.",
+        boardTitle: "Full placement diagram",
+        boardSub: "Jumper wires have no 1/2 end labels; either end can go first. Hover a part to see its orientation note.",
+        legendWire: "Jumper wires",
+        legendPolarity: "Orientation",
+        legendPower: "Power",
+        langButton: "한국어",
+      },
+    };
 
-        <textarea id="exportBox" class="export-box" readonly spellcheck="false"></textarea>
-      </main>
-    </div>
+    const copy = {
+      ko: {
+        block: "블록",
+        plusLead: "빨간 + 전원선",
+        minusLead: "파란/검은 − 전원선",
+        connectLast: "전원은 마지막에",
+        diodeBand: "검은 띠 ↓",
+        diodeLabel: "D1 다이오드",
+        capLong: "긴 +다리 ↑",
+        capLabel: "C1 대용량",
+        ledLong: "긴 +다리 ↓",
+        ledLabel: "노란 LED",
+        icNotch: "홈/점 ↓",
+        icLabel: "U1 인버터",
+        buzzerPlus: "+ 왼쪽",
+        buzzerLabel: "버저",
+        transistorSide: "둥근 면 ←",
+        transistorLabel: "트랜지스터",
+        switchLabel: "스위치\n세 다리 세로",
+        pot: "가변저항",
+        chipCap: "C2 소용량\n방향 없음",
+        noPolarity: "방향 없음",
+      },
+      en: {
+        block: "Block",
+        plusLead: "red + power lead",
+        minusLead: "blue/black − power lead",
+        connectLast: "connect power last",
+        diodeBand: "black band ↓",
+        diodeLabel: "D1 diode",
+        capLong: "long + leg ↑",
+        capLabel: "C1 large cap",
+        ledLong: "long + leg ↓",
+        ledLabel: "yellow LED",
+        icNotch: "notch/dot ↓",
+        icLabel: "U1 inverter",
+        buzzerPlus: "+ on left",
+        buzzerLabel: "buzzer",
+        transistorSide: "round side ←",
+        transistorLabel: "transistor",
+        switchLabel: "switch\n3 legs vertical",
+        pot: "potentiometer",
+        chipCap: "C2 small cap\nno direction",
+        noPolarity: "no direction",
+      },
+    };
 
-    <script src="app.js"></script>
-  </body>
+    const templates = {
+      ic4069: {
+        pins: [
+          { name: "4Y", number: 8, dc: 0, dr: 0 },
+          { name: "4A", number: 9, dc: 0, dr: 1 },
+          { name: "5Y", number: 10, dc: 0, dr: 2 },
+          { name: "5A", number: 11, dc: 0, dr: 3 },
+          { name: "6Y", number: 12, dc: 0, dr: 4 },
+          { name: "6A", number: 13, dc: 0, dr: 5 },
+          { name: "VDD", number: 14, dc: 0, dr: 6 },
+          { name: "VSS", number: 7, dc: 1, dr: 0 },
+          { name: "3Y", number: 6, dc: 1, dr: 1 },
+          { name: "3A", number: 5, dc: 1, dr: 2 },
+          { name: "2Y", number: 4, dc: 1, dr: 3 },
+          { name: "2A", number: 3, dc: 1, dr: 4 },
+          { name: "1Y", number: 2, dc: 1, dr: 5 },
+          { name: "1A", number: 1, dc: 1, dr: 6 },
+        ],
+      },
+      buzzer: { pins: [{ name: "+", dc: 0, dr: 0 }, { name: "−", dc: 1, dr: 0 }] },
+      transistor: { pins: [{ name: "C", dc: 0, dr: 0 }, { name: "B", dc: 0, dr: 1 }, { name: "E", dc: 0, dr: 2 }] },
+      switch3: { pins: [{ name: "A", dc: 0, dr: 0 }, { name: "COM", dc: 0, dr: 1 }, { name: "B", dc: 0, dr: 2 }] },
+      pot: { pins: [{ name: "A", dc: 0, dr: 0 }, { name: "W", dc: 0, dr: 2 }, { name: "B", dc: 0, dr: 4 }] },
+      led: { pins: [{ name: "K", dc: 0, dr: 0 }, { name: "A", dc: 0, dr: 1 }] },
+      capCyl: { pins: [{ name: "+", dc: 0, dr: 0 }, { name: "−", dc: 0, dr: 1 }] },
+      capChip: { pins: [{ name: "A", dc: 0, dr: 0 }, { name: "B", dc: 0, dr: 3 }] },
+      batPlus: { pins: [{ name: "+", dc: 0, dr: 0 }] },
+      batMinus: { pins: [{ name: "−", dc: 0, dr: 0 }] },
+    };
+
+    const fixedComponents = [
+      { type: "fixed", template: "ic4069", label: "U1", origin: { col: "J", row: 6 } },
+      { type: "fixed", template: "batPlus", label: "BAT+", origin: { col: "F", row: 17 } },
+      { type: "fixed", template: "batMinus", label: "BAT−", origin: { col: "P", row: 17 } },
+      { type: "fixed", template: "pot", label: "POT1", origin: { col: "A", row: 7 }, knob: 22 },
+      { type: "fixed", template: "pot", label: "POT2", origin: { col: "T", row: 7 }, knob: 25 },
+      { type: "fixed", template: "led", label: "LED1", origin: { col: "H", row: 16 } },
+      { type: "fixed", template: "capCyl", label: "C1", origin: { col: "L", row: 12 } },
+      { type: "fixed", template: "capChip", label: "C2", origin: { col: "M", row: 10 } },
+      { type: "fixed", template: "transistor", label: "Q1", origin: { col: "H", row: 2 } },
+      { type: "fixed", template: "buzzer", label: "BZ1", origin: { col: "J", row: 2 } },
+      { type: "fixed", template: "switch3", label: "SW1", origin: { col: "T", row: 15 }, state: "B" },
+    ];
+
+    const spanComponents = [
+      jumper("W1", "C", 14, "C", 9),
+      jumper("W2", "D", 7, "D", 15),
+      jumper("W3", "E", 14, "F", 14),
+      jumper("W4", "E", 15, "F", 15),
+      jumper("W5", "G", 17, "G", 12),
+      jumper("W7", "G", 3, "G", 5),
+      jumper("W8", "K", 15, "J", 15),
+      jumper("W9", "J", 14, "K", 14),
+      resistor("R1", "J", 16, "K", 16),
+      jumper("W10", "J", 5, "K", 5),
+      jumper("W11", "L", 5, "L", 7),
+      jumper("W12", "L", 8, "L", 9),
+      diode("D1", "L", 10, "L", 11),
+      jumper("W13", "R", 5, "R", 13),
+      jumper("W15", "O", 16, "P", 16),
+      jumper("W16", "Q", 13, "Q", 16),
+      jumper("W17", "Q", 5, "Q", 2),
+      jumper("W18", "P", 2, "O", 2),
+      jumper("W19", "N", 2, "N", 6),
+      jumper("W20", "N", 15, "N", 12),
+      jumper("W21", "O", 14, "O", 11),
+      jumper("W22", "P", 13, "O", 13),
+      jumper("W23", "O", 10, "P", 10),
+      jumper("W24", "O", 9, "P", 9),
+      jumper("W14", "S", 10, "S", 11),
+      jumper("W6", "F", 4, "F", 12),
+    ];
+
+    function jumper(label, c1, r1, c2, r2) {
+      return { type: "span", kind: "jumper", label, from: { col: c1, row: r1 }, to: { col: c2, row: r2 } };
+    }
+    function resistor(label, c1, r1, c2, r2) {
+      return { type: "span", kind: "resistor", label, from: { col: c1, row: r1 }, to: { col: c2, row: r2 } };
+    }
+    function diode(label, c1, r1, c2, r2) {
+      return { type: "span", kind: "diode", label, from: { col: c1, row: r1 }, to: { col: c2, row: r2 } };
+    }
+
+    function applyLanguage() {
+      document.documentElement.lang = currentLang;
+      document.querySelectorAll("[data-i18n]").forEach((element) => {
+        const key = element.getAttribute("data-i18n");
+        element.textContent = ui[currentLang][key] || key;
+      });
+      document.querySelector("#langToggle").textContent = ui[currentLang].langButton;
+      document.querySelectorAll(".lang-block").forEach((block) => {
+        block.classList.toggle("hidden", block.dataset.lang !== currentLang);
+      });
+      renderBoard();
+    }
+
+    document.querySelector("#langToggle").addEventListener("click", () => {
+      currentLang = currentLang === "ko" ? "en" : "ko";
+      applyLanguage();
+    });
+
+    function renderBoard() {
+      const width = geom.left + 19 * geom.cell + 3 * geom.gap + geom.rightPad;
+      const height = geom.top + 16 * geom.cell + geom.bottomPad;
+      svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+      svg.innerHTML = "";
+
+      const base = group("base");
+      svg.append(base);
+      drawPanels(base);
+      drawLabels(base);
+      drawHoles(base);
+
+      calloutLayer = group("callouts");
+
+      const wireLayer = group("wire-layer");
+      svg.append(wireLayer);
+      spanComponents.forEach((component) => drawSpan(wireLayer, component));
+
+      const fixedLayer = group("fixed-layer");
+      svg.append(fixedLayer);
+      fixedComponents.forEach((component) => drawFixed(fixedLayer, component));
+
+      svg.append(calloutLayer);
+    }
+
+    function drawPanels(parent) {
+      for (let block = 0; block < 4; block += 1) {
+        const start = posOf(COLS[block * 5], 1);
+        const end = posOf(COLS[block * 5 + 4], 17);
+        parent.append(rect(start.x - 17, start.y - 17, end.x - start.x + 34, end.y - start.y + 34, { class: "block-panel", rx: 10 }));
+        parent.append(text((start.x + end.x) / 2, start.y - 43, `${copy[currentLang].block} ${block + 1}`, { class: "block-label" }));
+      }
+
+      ["E", "J", "O"].forEach((leftCol) => {
+        const left = posOf(leftCol, 1);
+        const right = posOf(COLS[colIndex(leftCol) + 1], 1);
+        parent.append(rect(left.x + 15, geom.top - 20, right.x - left.x - 30, 16 * geom.cell + 40, { class: "gap-panel", rx: 8 }));
+      });
+    }
+
+    function drawLabels(parent) {
+      COLS.forEach((col) => {
+        const p = posOf(col, 1);
+        parent.append(text(p.x, geom.top - 27, col, { class: "board-label" }));
+        parent.append(text(p.x, geom.top + 16 * geom.cell + 30, col, { class: "board-label" }));
+      });
+      ROWS.forEach((row) => {
+        const p = posOf("A", row);
+        parent.append(text(geom.left - 36, p.y, String(row), { class: "row-label" }));
+        parent.append(text(posOf("T", row).x + 36, p.y, String(row), { class: "row-label" }));
+      });
+    }
+
+    function drawHoles(parent) {
+      COLS.forEach((col) => {
+        ROWS.forEach((row) => {
+          const p = posOf(col, row);
+          parent.append(centeredRect(p.x, p.y, 11, 11, { class: "hole-ring", rx: 2 }));
+          parent.append(centeredRect(p.x, p.y, 6, 6, { class: "hole-dot", rx: 1 }));
+        });
+      });
+    }
+
+    function drawSpan(parent, component) {
+      const p1 = posOf(component.from.col, component.from.row);
+      const p2 = posOf(component.to.col, component.to.row);
+      const g = group(`component span ${component.kind}`);
+      parent.append(g);
+
+      if (component.kind === "jumper") {
+        const d = spanPath(p1, p2, "jumper");
+        g.append(path(d, { class: "wire-shadow" }));
+        g.append(path(d, { class: "wire-path" }));
+        g.append(circle(p1.x, p1.y, 6, { class: "wire-end" }));
+        g.append(circle(p2.x, p2.y, 6, { class: "wire-end" }));
+        return;
+      }
+
+      if (component.kind === "resistor") {
+        drawResistor(g, p1, p2, component.label);
+        return;
+      }
+
+      if (component.kind === "diode") {
+        drawDiode(g, p1, p2, component.label);
+        addCallout(g, p1.x + 34, p1.y - 24, [copy[currentLang].diodeBand, `${component.to.col}${component.to.row}`], "warn");
+      }
+    }
+
+    function drawResistor(g, p1, p2, label) {
+      g.append(line(p1.x, p1.y, p2.x, p2.y, { class: "component-shadow" }));
+      g.append(line(p1.x, p1.y, p2.x, p2.y, { stroke: "var(--resistor)", "stroke-width": 4, "stroke-linecap": "round" }));
+      const mid = midpoint(p1, p2);
+      const horizontal = Math.abs(p1.y - p2.y) < 0.5;
+      if (horizontal) {
+        g.append(rect(mid.x - 22, mid.y - 8, 44, 16, { class: "resistor-body", rx: 8 }));
+        [-11, -3, 6, 14].forEach((dx) => g.append(line(mid.x + dx, mid.y - 7, mid.x + dx, mid.y + 7, { stroke: "#6b4f25", "stroke-width": 2 })));
+      } else {
+        g.append(rect(mid.x - 8, mid.y - 22, 16, 44, { class: "resistor-body", rx: 8 }));
+      }
+      g.append(circle(p1.x, p1.y, 6, { class: "pin-dot" }));
+      g.append(circle(p2.x, p2.y, 6, { class: "pin-dot" }));
+      g.append(text(mid.x, mid.y - 20, label, { class: "component-label" }));
+    }
+
+    function drawDiode(g, p1, p2, label) {
+      g.append(line(p1.x, p1.y, p2.x, p2.y, { class: "component-shadow" }));
+      g.append(line(p1.x, p1.y, p2.x, p2.y, { stroke: "var(--diode)", "stroke-width": 4, "stroke-linecap": "round" }));
+      const mid = midpoint(p1, p2);
+      const vertical = Math.abs(p1.x - p2.x) < 0.5;
+      if (vertical) {
+        g.append(rect(mid.x - 9, mid.y - 18, 18, 36, { class: "diode-body", rx: 6 }));
+        g.append(rect(mid.x - 10, mid.y + 9, 20, 6, { class: "diode-band", rx: 2 }));
+      } else {
+        g.append(rect(mid.x - 18, mid.y - 9, 36, 18, { class: "diode-body", rx: 6 }));
+        g.append(rect(mid.x + 9, mid.y - 10, 6, 20, { class: "diode-band", rx: 2 }));
+      }
+      drawPin(g, p1, "A");
+      drawPin(g, p2, "K");
+      g.append(text(mid.x + 36, mid.y, label, { class: "component-label" }));
+    }
+
+    function drawFixed(parent, component) {
+      const g = group(`component fixed ${component.template}`);
+      parent.append(g);
+      const pins = fixedPins(component);
+      if (component.template === "ic4069") return drawIc(g, component, pins);
+      if (component.template === "pot") return drawPot(g, component, pins);
+      if (component.template === "buzzer") return drawBuzzer(g, component, pins);
+      if (component.template === "transistor") return drawTransistor(g, component, pins);
+      if (component.template === "switch3") return drawSwitch(g, component, pins);
+      if (component.template === "led") return drawLed(g, component, pins);
+      if (component.template === "capCyl") return drawCapCyl(g, component, pins);
+      if (component.template === "capChip") return drawCapChip(g, component, pins);
+      if (component.template === "batPlus") return drawBattery(g, component, pins, true);
+      if (component.template === "batMinus") return drawBattery(g, component, pins, false);
+    }
+
+    function drawIc(g, component, pins) {
+      const xs = pins.map((pin) => pin.point.x);
+      const ys = pins.map((pin) => pin.point.y);
+      const minX = Math.min(...xs) - 15;
+      const maxX = Math.max(...xs) + 15;
+      const minY = Math.min(...ys) - 20;
+      const maxY = Math.max(...ys) + 20;
+      g.append(rect(minX, minY, maxX - minX, maxY - minY, { class: "ic-body", rx: 10 }));
+      const notchY = maxY - 1;
+      g.append(path(`M ${(minX + maxX) / 2 - 16} ${notchY} Q ${(minX + maxX) / 2} ${notchY - 16} ${(minX + maxX) / 2 + 16} ${notchY}`, { class: "ic-notch" }));
+      const p9 = pins.find((pin) => pin.number === 9).point;
+      const p6 = pins.find((pin) => pin.number === 6).point;
+      const dot96 = midpoint(p9, p6);
+      g.append(circle(dot96.x, dot96.y, 4.5, { class: "ic-dot" }));
+      pins.forEach((pin) => drawPin(g, pin.point, String(pin.number)));
+      g.append(text((minX + maxX) / 2, (minY + maxY) / 2 - 12, "CD4069", { class: "component-label", fill: "#fff" }));
+      g.append(text((minX + maxX) / 2, (minY + maxY) / 2 + 10, component.label, { class: "component-label", fill: "#fff" }));
+      addCallout(g, (minX + maxX) / 2 + 62, maxY - 18, [copy[currentLang].icNotch, "pin 1: K12"], "warn");
+    }
+
+    function drawPot(g, component, pins) {
+      const center = pointsCenter(pins.map((pin) => pin.point));
+      const side = colIndex(component.origin.col) >= 15 ? 1 : -1;
+      const knob = { x: center.x + side * 82, y: center.y };
+      pins.forEach((pin) => {
+        g.append(line(pin.point.x, pin.point.y, knob.x - side * 15, knob.y, { stroke: "#0891b2", "stroke-width": 3, "stroke-linecap": "round" }));
+        drawPin(g, pin.point, pin.name);
+      });
+      g.append(circle(knob.x, knob.y, 25, { class: "pot-face" }));
+      const angle = 135 + (component.knob / 100) * 270;
+      const pointer = polarPoint(knob, angle, 17);
+      g.append(line(knob.x, knob.y, pointer.x, pointer.y, { class: "pot-pointer" }));
+      g.append(circle(knob.x, knob.y, 4, { fill: "#155e75" }));
+      g.append(text(knob.x, knob.y + 39, `${component.label} ${component.knob}%`, { class: "component-label" }));
+      g.append(text(knob.x, knob.y - 38, copy[currentLang].pot, { class: "small-label" }));
+    }
+
+    function drawBuzzer(g, component, pins) {
+      const center = pointsCenter(pins.map((pin) => pin.point));
+      g.append(circle(center.x, center.y, 34, { class: "component-shadow" }));
+      g.append(circle(center.x, center.y, 27, { class: "buzzer-face" }));
+      g.append(circle(center.x, center.y, 7, { class: "buzzer-hole" }));
+      pins.forEach((pin) => drawPin(g, pin.point, pin.name));
+      g.append(text(center.x, center.y - 38, component.label, { class: "component-label" }));
+      addCallout(g, center.x - 78, center.y - 18, [copy[currentLang].buzzerPlus, "J2"], "warn");
+    }
+
+    function drawTransistor(g, component, pins) {
+      const pinByName = Object.fromEntries(pins.map((pin) => [pin.name, pin]));
+      const b = pinByName.B.point;
+      const flatX = b.x + geom.cell / 2;
+      const topY = pinByName.C.point.y;
+      const botY = pinByName.E.point.y;
+      const r = (botY - topY) / 2;
+      g.append(path(`M ${flatX} ${topY} L ${flatX} ${botY} A ${r} ${r} 0 0 1 ${flatX} ${topY} Z`, { class: "transistor-face" }));
+      pins.forEach((pin) => drawPin(g, pin.point, pin.name));
+      g.append(text(b.x, botY + 22, component.label, { class: "component-label" }));
+      addCallout(g, b.x - 100, b.y - 13, [copy[currentLang].transistorSide], "warn");
+    }
+
+    function drawSwitch(g, component, pins) {
+      const ys = pins.map((pin) => pin.point.y);
+      const cx = pointsCenter(pins.map((pin) => pin.point)).x;
+      const top = Math.min(...ys);
+      const bottom = Math.max(...ys);
+      g.append(rect(cx - 21, top - 2, 42, (bottom - top) + 26, { class: "switch-body", rx: 7 }));
+      const nameMap = { A: "A", COM: "S", B: "B" };
+      pins.forEach((pin) => drawPin(g, pin.point, nameMap[pin.name] || pin.name));
+      multiText(g, cx - 54, (top + bottom) / 2, copy[currentLang].switchLabel.split("\n"), { class: "small-label", anchor: "middle" });
+    }
+
+    function drawLed(g, component, pins) {
+      const [k, a] = pins;
+      g.append(line(k.point.x, k.point.y, a.point.x, a.point.y, { class: "component-shadow" }));
+      g.append(line(k.point.x, k.point.y, a.point.x, a.point.y, { stroke: "#ca8a04", "stroke-width": 4, "stroke-linecap": "round" }));
+      const center = midpoint(k.point, a.point);
+      g.append(circle(center.x, center.y, 18, { class: "led-body" }));
+      g.append(path(`M ${center.x - 8} ${center.y + 2} L ${center.x} ${center.y - 8} L ${center.x + 8} ${center.y + 2} Z`, { fill: "#fff7ad", opacity: 0.85 }));
+      drawPin(g, k.point, "K");
+      drawPin(g, a.point, "A+");
+      g.append(text(center.x + 43, center.y - 2, component.label, { class: "component-label" }));
+      addCallout(g, center.x + 42, center.y + 14, [copy[currentLang].ledLong, "H17"], "warn");
+    }
+
+    function drawCapCyl(g, component, pins) {
+      const [plus, minus] = pins;
+      const center = midpoint(plus.point, minus.point);
+      g.append(line(plus.point.x, plus.point.y, minus.point.x, minus.point.y, { class: "component-shadow" }));
+      g.append(line(plus.point.x, plus.point.y, minus.point.x, minus.point.y, { stroke: "#4338ca", "stroke-width": 4, "stroke-linecap": "round" }));
+      g.append(rect(center.x - 15, center.y - 23, 30, 46, { class: "cap-cyl", rx: 8 }));
+      g.append(rect(center.x + 7, center.y - 19, 6, 38, { fill: "rgba(67,56,202,0.35)", rx: 3 }));
+      drawPin(g, plus.point, "+");
+      drawPin(g, minus.point, "−");
+      g.append(text(center.x + 45, center.y - 7, component.label, { class: "component-label" }));
+      addCallout(g, center.x + 45, center.y + 10, [copy[currentLang].capLong, "L12"], "warn");
+    }
+
+    function drawCapChip(g, component, pins) {
+      const [p1, p2] = pins;
+      const center = midpoint(p1.point, p2.point);
+      g.append(line(p1.point.x, p1.point.y, p2.point.x, p2.point.y, { class: "component-shadow" }));
+      g.append(line(p1.point.x, p1.point.y, p2.point.x, p2.point.y, { stroke: "#7c5e2a", "stroke-width": 4, "stroke-linecap": "round" }));
+      g.append(circle(center.x, center.y, 19, { class: "cap-chip" }));
+      drawPin(g, p1.point, "");
+      drawPin(g, p2.point, "");
+      multiText(g, center.x + 47, center.y - 2, copy[currentLang].chipCap.split("\n"), { class: "component-label", anchor: "middle" });
+    }
+
+    function drawBattery(g, component, pins, isPlus) {
+      const p = pins[0].point;
+      const cls = isPlus ? "battery-plus" : "battery-minus";
+      const color = isPlus ? "var(--redlead)" : "var(--bluelead)";
+      const label = isPlus ? "+" : "−";
+      g.append(circle(p.x, p.y, 15, { class: cls }));
+      g.append(text(p.x, p.y, label, { class: "pin-label", "font-size": 14 }));
+      const leadEnd = isPlus ? { x: p.x - 18, y: p.y + 38 } : { x: p.x + 20, y: p.y + 38 };
+      g.append(path(`M ${p.x} ${p.y + 15} C ${p.x} ${p.y + 28}, ${leadEnd.x} ${p.y + 22}, ${leadEnd.x} ${leadEnd.y}`, { fill: "none", stroke: color, "stroke-width": 5, "stroke-linecap": "round" }));
+      addCallout(g, isPlus ? p.x - 82 : p.x + 20, p.y + 18, [isPlus ? copy[currentLang].plusLead : copy[currentLang].minusLead, component.origin.col + component.origin.row], isPlus ? "danger" : "warn");
+      if (isPlus) addCallout(g, p.x + 58, p.y + 38, [copy[currentLang].connectLast], "danger");
+    }
+
+    function fixedPins(component) {
+      return templates[component.template].pins.map((pin) => {
+        const hole = offsetHole(component.origin, pin.dc, pin.dr);
+        return { ...pin, hole, point: posOf(hole.col, hole.row) };
+      });
+    }
+
+    function drawPin(parent, point, label = "") {
+      parent.append(centeredRect(point.x, point.y, 16, 16, { class: "pin-dot", rx: 3 }));
+      if (label) parent.append(text(point.x, point.y, label, { class: "pin-label" }));
+    }
+
+    function addCallout(owner, x, y, lines, tone = "") {
+      const textLines = Array.isArray(lines) ? lines : [lines];
+      const width = Math.max(...textLines.map((line) => String(line).length)) * 7 + 18;
+      const height = textLines.length * 15 + 11;
+      const cg = group("callout");
+      cg.append(rect(x, y, width, height, { class: `callout-box ${tone}`.trim(), rx: 8 }));
+      textLines.forEach((line, index) => {
+        cg.append(text(x + 9, y + 14 + index * 15, line, { class: "callout-text", "text-anchor": "start" }));
+      });
+      (calloutLayer || svg).append(cg);
+      if (owner) {
+        owner.addEventListener("mouseenter", () => cg.classList.add("show"));
+        owner.addEventListener("mouseleave", () => cg.classList.remove("show"));
+      }
+    }
+
+    function multiText(parent, x, y, lines, attrs = {}) {
+      const anchor = attrs.anchor || "middle";
+      lines.forEach((line, index) => {
+        parent.append(text(x, y + index * 14, line, { class: attrs.class || "small-label", "text-anchor": anchor }));
+      });
+    }
+
+    function spanPath(p1, p2, kind) {
+      if (kind !== "jumper") return `M ${p1.x} ${p1.y} L ${p2.x} ${p2.y}`;
+      if (Math.abs(p1.x - p2.x) < 0.5 || Math.abs(p1.y - p2.y) < 0.5) {
+        return `M ${p1.x} ${p1.y} L ${p2.x} ${p2.y}`;
+      }
+      const dx = p2.x - p1.x;
+      const dy = p2.y - p1.y;
+      const distance = Math.hypot(dx, dy);
+      const bend = Math.min(72, Math.max(18, distance * 0.18));
+      const cx = (p1.x + p2.x) / 2;
+      const cy = (p1.y + p2.y) / 2 - bend;
+      return `M ${p1.x} ${p1.y} Q ${cx} ${cy} ${p2.x} ${p2.y}`;
+    }
+
+    function posOf(col, row) {
+      const index = colIndex(col);
+      return {
+        x: geom.left + index * geom.cell + Math.floor(index / 5) * geom.gap,
+        y: geom.top + (row - 1) * geom.cell,
+      };
+    }
+
+    function colIndex(col) { return COLS.indexOf(col); }
+    function offsetHole(hole, dc, dr) { return { col: COLS[colIndex(hole.col) + dc], row: hole.row + dr }; }
+    function midpoint(a, b) { return { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 }; }
+    function pointsCenter(points) { return { x: points.reduce((sum, p) => sum + p.x, 0) / points.length, y: points.reduce((sum, p) => sum + p.y, 0) / points.length }; }
+    function polarPoint(center, angleDegrees, radius) { const radians = angleDegrees * Math.PI / 180; return { x: center.x + Math.cos(radians) * radius, y: center.y + Math.sin(radians) * radius }; }
+
+    function element(name, attrs = {}) {
+      const node = document.createElementNS(SVG_NS, name);
+      Object.entries(attrs).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) node.setAttribute(key, value);
+      });
+      return node;
+    }
+    function group(className) { return element("g", { class: className }); }
+    function rect(x, y, width, height, attrs = {}) { return element("rect", { x, y, width, height, ...attrs }); }
+    function centeredRect(x, y, width, height, attrs = {}) { return rect(x - width / 2, y - height / 2, width, height, attrs); }
+    function circle(cx, cy, r, attrs = {}) { return element("circle", { cx, cy, r, ...attrs }); }
+    function line(x1, y1, x2, y2, attrs = {}) { return element("line", { x1, y1, x2, y2, ...attrs }); }
+    function path(d, attrs = {}) { return element("path", { d, ...attrs }); }
+    function text(x, y, value, attrs = {}) {
+      const node = element("text", { x, y, ...attrs });
+      node.textContent = value;
+      return node;
+    }
+
+    applyLanguage();
+  </script>
+</body>
 </html>
