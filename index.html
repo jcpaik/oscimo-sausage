@@ -162,6 +162,21 @@
       display: inline-block;
     }
 
+    .legend i.dot { border-radius: 999px; }
+
+    .legend i.i-sym {
+      width: auto;
+      height: auto;
+      background: none;
+      border-radius: 0;
+      font-style: normal;
+      font-weight: 900;
+      font-size: 12px;
+      line-height: 1;
+      color: #111827;
+      letter-spacing: 1px;
+    }
+
     .svg-wrap {
       overflow: auto;
       padding: 12px 14px 18px;
@@ -337,7 +352,6 @@
 
     .component-label,
     .pin-label,
-    .callout-text,
     .small-label {
       font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans KR", sans-serif;
       pointer-events: none;
@@ -369,35 +383,6 @@
       dominant-baseline: middle;
     }
 
-    .callout-box {
-      fill: rgba(255, 255, 255, 0.94);
-      stroke: #c7bda9;
-      stroke-width: 1.1;
-    }
-
-    .callout-box.warn {
-      fill: #fff7ed;
-      stroke: #fdba74;
-    }
-
-    .callout-box.danger {
-      fill: #fff1f2;
-      stroke: #fca5a5;
-    }
-
-    .callout {
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.15s ease;
-    }
-
-    .callout.show { opacity: 0.7; }
-
-    .callout-text {
-      fill: #2d3137;
-      font-size: 11px;
-      font-weight: 800;
-    }
 
     .small-label {
       fill: #4b5563;
@@ -408,7 +393,7 @@
     }
 
     .resistor-body { fill: #f3e7c4; stroke: #906a35; stroke-width: 1.5; }
-    .diode-body { fill: #a64b3c; stroke: #5f1d17; stroke-width: 1.5; }
+    .diode-body { fill: #a64b3c; stroke: #5f1d17; stroke-width: 1.5; opacity: 0.5; }
     .diode-band { fill: #111827; }
     .led-body { fill: #facc15; stroke: #b45309; stroke-width: 2; opacity: 0.92; }
     .cap-cyl { fill: #c7d2fe; stroke: #4338ca; stroke-width: 1.5; }
@@ -460,8 +445,8 @@
             </div>
             <div class="legend" aria-label="legend">
               <span><i style="background:#f97316"></i><b data-i18n="legendWire">점퍼선</b></span>
-              <span><i style="background:#facc15"></i><b data-i18n="legendPolarity">방향 주의</b></span>
-              <span><i style="background:#ef4444"></i><b data-i18n="legendPower">전원</b></span>
+              <span><i class="i-sym">+ −</i><b data-i18n="legendPolarity">방향 주의</b></span>
+              <span><i class="dot" style="background:#ef4444"></i><i class="dot" style="background:#2563eb"></i><b data-i18n="legendPower">전원</b></span>
             </div>
           </div>
           <div class="svg-wrap">
@@ -477,7 +462,7 @@
         <div class="notes-card">
           <div class="lang-block" data-lang="ko">
             <div class="answer-card">
-              빈칸 답: <strong>대용량 캐패시터 긴 다리 = 위쪽 L12</strong>, <strong>LED 긴 다리 = 아래쪽 H17</strong>.
+              긴 다리는 <strong>+극</strong>에, 짧은 다리는 <strong>−극</strong>에 꽂으세요.
             </div>
             <div class="danger-card">
               전원은 회로 조립을 전부 마친 뒤에만 연결하세요. 빨간 +선은 <code class="coord">F17</code>, 파란색/검은색 −선은 <code class="coord">P17</code>입니다. 두 전원선이 직접 닿으면 안 됩니다.
@@ -487,12 +472,14 @@
               <h2>부품 생김새</h2>
               <ul>
                 <li><strong>LED</strong>: 노란색입니다. 긴 다리가 +, 짧은 다리가 −입니다.</li>
-                <li><strong>다이오드 D1</strong>: 붉은빛이 도는 아주 작은 부품이고, 한쪽 끝에 검은 띠가 있습니다.</li>
+                <li><strong>다이오드 D1</strong>: 붉은빛이 도는 아주 작은 부품이고, 한쪽 끝에 검은 띠가 −입니다.</li>
                 <li><strong>인버터 U1</strong>: 길쭉한 검은 칩입니다. 홈이나 점 표시가 있는 쪽을 아래로 둡니다.</li>
                 <li><strong>소용량 캐패시터 C2</strong>: 동그란 베이지색 칩입니다. 방향은 없습니다.</li>
                 <li><strong>대용량 캐패시터 C1</strong>: 기둥처럼 생긴 원통형 부품입니다. 긴 다리가 +입니다.</li>
                 <li><strong>버저 BZ1</strong>: 동그란 원형 부품이고 +마크가 있습니다. 소리를 내는 부품입니다.</li>
                 <li><strong>스위치 SW1</strong>: 다리 3개짜리 작은 스위치입니다. 세 다리를 <code class="coord">T15</code>–<code class="coord">T17</code>에 세로로 꽂습니다.</li>
+                <li><strong>가변저항 POT1·POT2</strong>: 쇠기둥처럼 생긴 몸체에 다리가 3개 달려 있습니다.</li>
+                <li><strong>저항 R1</strong>: 왼쪽에 빨간색 띠가 두 줄 있습니다.</li>
               </ul>
             </section>
 
@@ -547,7 +534,7 @@
 
           <div class="lang-block hidden" data-lang="en">
             <div class="answer-card">
-              Fill-ins: <strong>large capacitor long leg = upper hole L12</strong>; <strong>LED long leg = lower hole H17</strong>.
+              Insert the <strong>long leg</strong> into the <strong>+</strong> hole and the <strong>short leg</strong> into the <strong>−</strong> hole.
             </div>
             <div class="danger-card">
               Connect power only after the circuit is fully assembled. Red + lead goes to <code class="coord">F17</code>; blue/black − lead goes to <code class="coord">P17</code>. Never let the two power leads touch directly.
@@ -557,12 +544,14 @@
               <h2>What each part looks like</h2>
               <ul>
                 <li><strong>LED</strong>: yellow. The long leg is +, the short leg is −.</li>
-                <li><strong>Diode D1</strong>: tiny reddish part with a black band on one end.</li>
+                <li><strong>Diode D1</strong>: tiny reddish part, and the black band on one end is the − side.</li>
                 <li><strong>Inverter U1</strong>: long black chip. Put the notch or dot end downward.</li>
                 <li><strong>Small capacitor C2</strong>: round beige chip. It has no direction.</li>
                 <li><strong>Large capacitor C1</strong>: upright cylinder-shaped part. The long leg is +.</li>
                 <li><strong>Buzzer BZ1</strong>: round part with a + mark. It makes the sound.</li>
                 <li><strong>Switch SW1</strong>: small three-legged switch. Insert the three legs vertically into <code class="coord">T15</code>–<code class="coord">T17</code>.</li>
+                <li><strong>Potentiometers POT1·POT2</strong>: a metal post-shaped body with three legs.</li>
+                <li><strong>Resistor R1</strong>: two red bands on the left side.</li>
               </ul>
             </section>
 
@@ -626,14 +615,13 @@
     const svg = document.querySelector("#boardSvg");
     const SVG_NS = "http://www.w3.org/2000/svg";
     let currentLang = "ko";
-    let calloutLayer = null;
 
     const ui = {
       ko: {
         title: "소시지 신시사이저 브레드보드 조립 안내",
         subtitle: "전원은 맨 마지막에 연결하세요. 행 번호는 위에서 아래로 커집니다.",
         boardTitle: "전체 배치도",
-        boardSub: "점퍼선에는 1/2 끝표시를 넣지 않았습니다. 어느 쪽부터 꽂아도 됩니다. 부품에 마우스를 올리면 방향 안내가 나타납니다.",
+        boardSub: "점퍼선에는 1/2 끝표시를 넣지 않았습니다. 어느 쪽부터 꽂아도 됩니다.",
         legendWire: "점퍼선",
         legendPolarity: "방향 주의",
         legendPower: "전원",
@@ -643,7 +631,7 @@
         title: "Sausage Synth Breadboard Assembly Guide",
         subtitle: "Connect power last. Row numbers increase from top to bottom.",
         boardTitle: "Full placement diagram",
-        boardSub: "Jumper wires have no 1/2 end labels; either end can go first. Hover a part to see its orientation note.",
+        boardSub: "Jumper wires have no 1/2 end labels; either end can go first.",
         legendWire: "Jumper wires",
         legendPolarity: "Orientation",
         legendPower: "Power",
@@ -811,8 +799,6 @@
       drawLabels(base);
       drawHoles(base);
 
-      calloutLayer = group("callouts");
-
       const wireLayer = group("wire-layer");
       svg.append(wireLayer);
       spanComponents.forEach((component) => drawSpan(wireLayer, component));
@@ -820,8 +806,6 @@
       const fixedLayer = group("fixed-layer");
       svg.append(fixedLayer);
       fixedComponents.forEach((component) => drawFixed(fixedLayer, component));
-
-      svg.append(calloutLayer);
     }
 
     function drawPanels(parent) {
@@ -884,7 +868,6 @@
 
       if (component.kind === "diode") {
         drawDiode(g, p1, p2, component.label);
-        addCallout(g, p1.x + 34, p1.y - 24, [copy[currentLang].diodeBand, `${component.to.col}${component.to.row}`], "warn");
       }
     }
 
@@ -916,9 +899,9 @@
         g.append(rect(mid.x - 18, mid.y - 9, 36, 18, { class: "diode-body", rx: 6 }));
         g.append(rect(mid.x + 9, mid.y - 10, 6, 20, { class: "diode-band", rx: 2 }));
       }
-      drawPin(g, p1, "A");
-      drawPin(g, p2, "K");
-      g.append(text(mid.x + 36, mid.y, label, { class: "component-label" }));
+      drawPin(g, p1, "+");
+      drawPin(g, p2, "−");
+      g.append(text(mid.x, mid.y, label, { class: "component-label" }));
     }
 
     function drawFixed(parent, component) {
@@ -954,7 +937,6 @@
       pins.forEach((pin) => drawPin(g, pin.point, String(pin.number)));
       g.append(text((minX + maxX) / 2, (minY + maxY) / 2 - 12, "CD4069", { class: "component-label", fill: "#fff" }));
       g.append(text((minX + maxX) / 2, (minY + maxY) / 2 + 10, component.label, { class: "component-label", fill: "#fff" }));
-      addCallout(g, (minX + maxX) / 2 + 62, maxY - 18, [copy[currentLang].icNotch, "pin 1: K12"], "warn");
     }
 
     function drawPot(g, component, pins) {
@@ -970,8 +952,7 @@
       const pointer = polarPoint(knob, angle, 17);
       g.append(line(knob.x, knob.y, pointer.x, pointer.y, { class: "pot-pointer" }));
       g.append(circle(knob.x, knob.y, 4, { fill: "#155e75" }));
-      g.append(text(knob.x, knob.y + 39, `${component.label} ${component.knob}%`, { class: "component-label" }));
-      g.append(text(knob.x, knob.y - 38, copy[currentLang].pot, { class: "small-label" }));
+      g.append(text(knob.x, knob.y + 39, component.label, { class: "component-label" }));
     }
 
     function drawBuzzer(g, component, pins) {
@@ -981,7 +962,6 @@
       g.append(circle(center.x, center.y, 7, { class: "buzzer-hole" }));
       pins.forEach((pin) => drawPin(g, pin.point, pin.name));
       g.append(text(center.x, center.y - 38, component.label, { class: "component-label" }));
-      addCallout(g, center.x - 78, center.y - 18, [copy[currentLang].buzzerPlus, "J2"], "warn");
     }
 
     function drawTransistor(g, component, pins) {
@@ -994,7 +974,6 @@
       g.append(path(`M ${flatX} ${topY} L ${flatX} ${botY} A ${r} ${r} 0 0 1 ${flatX} ${topY} Z`, { class: "transistor-face" }));
       pins.forEach((pin) => drawPin(g, pin.point, pin.name));
       g.append(text(b.x, botY + 22, component.label, { class: "component-label" }));
-      addCallout(g, b.x - 100, b.y - 13, [copy[currentLang].transistorSide], "warn");
     }
 
     function drawSwitch(g, component, pins) {
@@ -1002,10 +981,11 @@
       const cx = pointsCenter(pins.map((pin) => pin.point)).x;
       const top = Math.min(...ys);
       const bottom = Math.max(...ys);
-      g.append(rect(cx - 21, top - 2, 42, (bottom - top) + 26, { class: "switch-body", rx: 7 }));
+      const cy = (top + bottom) / 2;
+      const h = (bottom - top) + 26;
+      g.append(rect(cx - 21, cy - h / 2, 42, h, { class: "switch-body", rx: 7 }));
       const nameMap = { A: "A", COM: "S", B: "B" };
       pins.forEach((pin) => drawPin(g, pin.point, nameMap[pin.name] || pin.name));
-      multiText(g, cx - 54, (top + bottom) / 2, copy[currentLang].switchLabel.split("\n"), { class: "small-label", anchor: "middle" });
     }
 
     function drawLed(g, component, pins) {
@@ -1015,10 +995,9 @@
       const center = midpoint(k.point, a.point);
       g.append(circle(center.x, center.y, 18, { class: "led-body" }));
       g.append(path(`M ${center.x - 8} ${center.y + 2} L ${center.x} ${center.y - 8} L ${center.x + 8} ${center.y + 2} Z`, { fill: "#fff7ad", opacity: 0.85 }));
-      drawPin(g, k.point, "K");
-      drawPin(g, a.point, "A+");
-      g.append(text(center.x + 43, center.y - 2, component.label, { class: "component-label" }));
-      addCallout(g, center.x + 42, center.y + 14, [copy[currentLang].ledLong, "H17"], "warn");
+      drawPin(g, k.point, "−");
+      drawPin(g, a.point, "+");
+      g.append(text(center.x, center.y, component.label, { class: "component-label" }));
     }
 
     function drawCapCyl(g, component, pins) {
@@ -1030,8 +1009,7 @@
       g.append(rect(center.x + 7, center.y - 19, 6, 38, { fill: "rgba(67,56,202,0.35)", rx: 3 }));
       drawPin(g, plus.point, "+");
       drawPin(g, minus.point, "−");
-      g.append(text(center.x + 45, center.y - 7, component.label, { class: "component-label" }));
-      addCallout(g, center.x + 45, center.y + 10, [copy[currentLang].capLong, "L12"], "warn");
+      g.append(text(center.x, center.y, component.label, { class: "component-label" }));
     }
 
     function drawCapChip(g, component, pins) {
@@ -1042,7 +1020,7 @@
       g.append(circle(center.x, center.y, 19, { class: "cap-chip" }));
       drawPin(g, p1.point, "");
       drawPin(g, p2.point, "");
-      multiText(g, center.x + 47, center.y - 2, copy[currentLang].chipCap.split("\n"), { class: "component-label", anchor: "middle" });
+      g.append(text(center.x, center.y, component.label, { class: "component-label" }));
     }
 
     function drawBattery(g, component, pins, isPlus) {
@@ -1054,8 +1032,6 @@
       g.append(text(p.x, p.y, label, { class: "pin-label", "font-size": 14 }));
       const leadEnd = isPlus ? { x: p.x - 18, y: p.y + 38 } : { x: p.x + 20, y: p.y + 38 };
       g.append(path(`M ${p.x} ${p.y + 15} C ${p.x} ${p.y + 28}, ${leadEnd.x} ${p.y + 22}, ${leadEnd.x} ${leadEnd.y}`, { fill: "none", stroke: color, "stroke-width": 5, "stroke-linecap": "round" }));
-      addCallout(g, isPlus ? p.x - 82 : p.x + 20, p.y + 18, [isPlus ? copy[currentLang].plusLead : copy[currentLang].minusLead, component.origin.col + component.origin.row], isPlus ? "danger" : "warn");
-      if (isPlus) addCallout(g, p.x + 58, p.y + 38, [copy[currentLang].connectLast], "danger");
     }
 
     function fixedPins(component) {
@@ -1070,21 +1046,6 @@
       if (label) parent.append(text(point.x, point.y, label, { class: "pin-label" }));
     }
 
-    function addCallout(owner, x, y, lines, tone = "") {
-      const textLines = Array.isArray(lines) ? lines : [lines];
-      const width = Math.max(...textLines.map((line) => String(line).length)) * 7 + 18;
-      const height = textLines.length * 15 + 11;
-      const cg = group("callout");
-      cg.append(rect(x, y, width, height, { class: `callout-box ${tone}`.trim(), rx: 8 }));
-      textLines.forEach((line, index) => {
-        cg.append(text(x + 9, y + 14 + index * 15, line, { class: "callout-text", "text-anchor": "start" }));
-      });
-      (calloutLayer || svg).append(cg);
-      if (owner) {
-        owner.addEventListener("mouseenter", () => cg.classList.add("show"));
-        owner.addEventListener("mouseleave", () => cg.classList.remove("show"));
-      }
-    }
 
     function multiText(parent, x, y, lines, attrs = {}) {
       const anchor = attrs.anchor || "middle";
